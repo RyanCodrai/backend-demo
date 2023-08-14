@@ -2,7 +2,7 @@ import unittest
 import requests
 from dotenv import load_dotenv
 import os
-from utils import read_api_version
+from utils import read_api_version, iso_to_unix
 
 # Load environment variables from .env file
 load_dotenv()
@@ -72,8 +72,9 @@ class TestWeatherService(unittest.TestCase):
 
         city_name = 'London'
         iso_time = '2018-10-14T14:34:40+0100'
+        unix_time = iso_to_unix(iso_time)
 
-        url = f"https://api.openweathermap.org/data/3.0/onecall?lat=51.5073219&lon=-0.1276474&units=metric&appid={self.api_key}"
+        url = f"https://api.openweathermap.org/data/3.0/onecall?lat=51.5073219&lon=-0.1276474&units=metric&dt={unix_time}&appid={self.api_key}"
         response = requests.get(url)
         response_payload = response.json()['current']
 
@@ -89,7 +90,8 @@ class TestWeatherService(unittest.TestCase):
             'clouds': cloud_cover
         }
 
-        api_response = requests.get(f'{self.base_url}/forecast/{city_name}/').json()
+        params = {'at': iso_time}
+        api_response = requests.get(f'{self.base_url}/forecast/{city_name}/', params=params).json()
         self.assertEqual(api_response, ideal_response, error_message)
 
 
