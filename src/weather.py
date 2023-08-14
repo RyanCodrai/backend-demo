@@ -35,10 +35,16 @@ class WeatherAPI:
         url = f"https://api.openweathermap.org/data/3.0/onecall"
 
         lat_long = self.geo_code_api.get_lat_long(city)
-        params = {'appid': self.api_key, **lat_long}
+        params = {
+            'appid': self.api_key,
+            'units': 'metric',
+            **lat_long
+        }
 
         response = requests.get(url, params=params)
         response_payload = response.json()['current']
+
+        print(response_payload)
 
         cloud_cover = None
         for weather in response_payload['weather']:
