@@ -6,6 +6,6 @@ services:
     container_name: weather_service
     restart: always
     volumes:
-      - ./logs:/usr/src/app/logs
+      - ./logs:/usr/src/app/src/logs
     ports:
       - "8080:8080"
