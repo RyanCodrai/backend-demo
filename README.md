@@ -12,3 +12,7 @@
 
 ## Swagger documentation
 Navigate to http://localhost:8080/docs once the container has been started to find documentation on the weather API endpoints.
+
+## Stretch goals achieved
+1. Containerisation
+2. Caching of weather requests for (city, date_time) pairs
