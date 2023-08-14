@@ -6,6 +6,12 @@ class TestLocalService(unittest.TestCase):
     def setUp(self):
         # Set up any necessary resources before each test case
         self.base_url = "http://localhost:8080"
+        self.api_version = self.read_api_version()
+
+    @staticmethod
+    def read_api_version():
+        with open('VERSION') as f:
+            return f.read()
 
     def test_availability(self):
         # Test if the service responds with a successful status code
@@ -13,7 +19,7 @@ class TestLocalService(unittest.TestCase):
         ideal_response = {
           "name": "weatherservice",
           "status": "ok",
-          "version": "1.0.0"
+          "version": self.api_version
         }
 
         api_response = requests.get(f'{self.base_url}/ping')
