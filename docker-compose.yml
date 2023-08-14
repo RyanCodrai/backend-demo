@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  weather_service:
+    build: .
+    container_name: weather_service
+    restart: always
+    volumes:
+      - ./logs:/usr/src/app/logs
+    ports:
+      - "8080:8080"
