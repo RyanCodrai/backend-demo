@@ -2,7 +2,7 @@ import unittest
 import requests
 
 
-class TestLocalService(unittest.TestCase):
+class TestWeatherService(unittest.TestCase):
     def setUp(self):
         # Set up any necessary resources before each test case
         self.base_url = "http://localhost:8080"
