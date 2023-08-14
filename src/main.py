@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import logging
 from weather import WeatherAPI
-from utils import read_api_version
+from utils import read_api_version, iso_to_unix
 
 
 logging.basicConfig(
@@ -28,5 +28,6 @@ async def status():
 
 
 @app.get("/forecast/{city}/")
-async def forecast(city):
-    return weather_api.get_weather(city)
+async def forecast(city, at=None):
+    unix_time = iso_to_unix(at) if at else None
+    return weather_api.get_weather(city, unix_time)

@@ -31,7 +31,7 @@ class WeatherAPI:
         self.api_key = os.getenv("WEATHER_API_KEY")
         self.geo_code_api = GeoCodeAPI()
 
-    def get_weather(self, city):
+    def get_weather(self, city, unix_time=None):
         url = f"https://api.openweathermap.org/data/3.0/onecall"
 
         lat_long = self.geo_code_api.get_lat_long(city)
@@ -40,11 +40,11 @@ class WeatherAPI:
             'units': 'metric',
             **lat_long
         }
+        if unix_time:
+            params['dt'] = unix_time
 
         response = requests.get(url, params=params)
         response_payload = response.json()['current']
-
-        print(response_payload)
 
         cloud_cover = None
         for weather in response_payload['weather']:
@@ -57,7 +57,3 @@ class WeatherAPI:
             'pressure': f'{response_payload["pressure"]} hPa',
             'clouds': cloud_cover
         }
-
-
-api = WeatherAPI()
-print(api.get_weather('London'))
