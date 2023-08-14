@@ -101,6 +101,24 @@ class TestWeatherService(unittest.TestCase):
         api_response = requests.get(f'{self.base_url}/forecast/{city_name}/')
         self.assertEqual(api_response.status_code, 404, error_message)
 
+    def test_date_in_past(self):
+        # Test whether the api correctly responds with 400 for date before January 1st, 1970.
+        error_message = f"Service did not respond 400 for date before January 1st, 1970."
+        city_name = 'London'
+        iso_time = '1938-12-25'
+        api_response = requests.get(f'{self.base_url}/forecast/{city_name}', params={'at': iso_time})
+        self.assertEqual(api_response.status_code, 400, error_message)
+
+    def test_date_in_future(self):
+        # Test whether the api correctly responds with 400 for date in the future
+        error_message = f"Service did not respond 400 for date in the future"
+        city_name = 'London'
+        iso_time = '1938-12-25'
+        api_response = requests.get(f'{self.base_url}/forecast/{city_name}', params={'at': iso_time})
+        self.assertEqual(api_response.status_code, 400, error_message)
+
+
+
 
 
 if __name__ == '__main__':
