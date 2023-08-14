@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 import requests
 from fastapi import HTTPException
+from functools import lru_cache
 
 # Load environment variables from .env file
 load_dotenv()
@@ -34,17 +35,17 @@ class WeatherAPI:
         self.api_key = os.getenv("WEATHER_API_KEY")
         self.geo_code_api = GeoCodeAPI()
 
-    def get_weather(self, city, unix_time=None):
+    @lru_cache(maxsize=128)
+    def get_weather(self, city, unix_time):
         url = f"https://api.openweathermap.org/data/3.0/onecall"
 
         lat_long = self.geo_code_api.get_lat_long(city)
         params = {
             'appid': self.api_key,
             'units': 'metric',
+            'dt': unix_time,
             **lat_long
         }
-        if unix_time:
-            params['dt'] = unix_time
 
         response = requests.get(url, params=params).json()
         response_payload = response['current']
