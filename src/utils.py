@@ -1,4 +1,4 @@
-import time
+from dateutil import parser
 
 
 def read_api_version():
@@ -8,9 +8,10 @@ def read_api_version():
 
 def iso_to_unix(iso_time):
     try:
-        iso_format = "%Y-%m-%dT%H:%M:%S%z"
-        unix_timestamp = time.mktime(time.strptime(iso_time, iso_format))
-        return int(unix_timestamp)
+        dt = parser.isoparse(iso_time)
+
+        unix_timestamp = int(dt.timestamp())
+        return unix_timestamp
     except ValueError:
-        raise ValueError("Invalid ISO time format with offset")
+        raise ValueError("Invalid ISO time format")
 
