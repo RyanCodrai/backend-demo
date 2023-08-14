@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import logging
 from weather import WeatherAPI
+from utils import read_api_version
 
 
 logging.basicConfig(
@@ -15,11 +16,6 @@ logger.setLevel(logging.DEBUG)
 
 weather_api = WeatherAPI()
 app = FastAPI(version='0.3.0')
-
-
-def read_api_version():
-    with open('VERSION') as f:
-        return f.read()
 
 
 @app.get("/ping/")

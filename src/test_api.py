@@ -2,6 +2,7 @@ import unittest
 import requests
 from dotenv import load_dotenv
 import os
+from utils import read_api_version
 
 # Load environment variables from .env file
 load_dotenv()
@@ -11,14 +12,9 @@ class TestWeatherService(unittest.TestCase):
     def setUp(self):
         # Set up any necessary resources before each test case
         self.base_url = "http://localhost:8080"
-        self.api_version = self.read_api_version()
+        self.api_version = read_api_version()
         # Access api key stored in environment variable
         self.api_key = os.getenv("WEATHER_API_KEY")
-
-    @staticmethod
-    def read_api_version():
-        with open('VERSION') as f:
-            return f.read()
 
     @staticmethod
     def cloud_cover_description(cloud_percentage):
@@ -68,6 +64,34 @@ class TestWeatherService(unittest.TestCase):
 
         api_response = requests.get(f'{self.base_url}/forecast/{city_name}/').json()
         self.assertEqual(api_response, ideal_response, error_message)
+
+
+    def test_city_weather_time(self):
+        # Test weather for London at a specific date and time
+        error_message = f"Service did not respond with correct weather information"
+
+        city_name = 'London'
+        iso_time = '2018-10-14T14:34:40+0100'
+
+        url = f"https://api.openweathermap.org/data/3.0/onecall?lat=51.5073219&lon=-0.1276474&units=metric&appid={self.api_key}"
+        response = requests.get(url)
+        response_payload = response.json()['current']
+
+        cloud_cover = None
+        for weather in response_payload['weather']:
+            if weather['main'] == 'Clouds':
+                cloud_cover = weather['description']
+
+        ideal_response = {
+            'temperature': f'{response_payload["temp"]}C',
+            'humidity': f'{response_payload["humidity"]}%',
+            'pressure': f'{response_payload["pressure"]} hPa',
+            'clouds': cloud_cover
+        }
+
+        api_response = requests.get(f'{self.base_url}/forecast/{city_name}/').json()
+        self.assertEqual(api_response, ideal_response, error_message)
+
 
 
 if __name__ == '__main__':
