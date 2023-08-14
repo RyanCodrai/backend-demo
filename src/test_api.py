@@ -94,6 +94,13 @@ class TestWeatherService(unittest.TestCase):
         api_response = requests.get(f'{self.base_url}/forecast/{city_name}/', params=params).json()
         self.assertEqual(api_response, ideal_response, error_message)
 
+    def test_city_not_found(self):
+        # Test the current weather for a made up city that can't be found
+        error_message = f"Service did not respond 404 for city not found"
+        city_name = 'midgar'
+        api_response = requests.get(f'{self.base_url}/forecast/{city_name}/')
+        self.assertEqual(api_response.status_code, 404, error_message)
+
 
 
 if __name__ == '__main__':
