@@ -42,7 +42,7 @@ class TestWeatherService(unittest.TestCase):
           "version": self.api_version
         }
 
-        api_response = requests.get(f'{self.base_url}/ping')
+        api_response = requests.get(f'{self.base_url}/ping/')
         self.assertEqual(api_response.json(), ideal_response, error_message)
 
     def test_city_weather(self):
@@ -66,7 +66,7 @@ class TestWeatherService(unittest.TestCase):
             'clouds': cloud_cover
         }
 
-        api_response = requests.get(f'{self.base_url}/forecast/{city_name}').json()
+        api_response = requests.get(f'{self.base_url}/forecast/{city_name}/').json()
         self.assertEqual(api_response, ideal_response, error_message)
 
 
