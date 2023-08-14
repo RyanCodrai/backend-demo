@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 import requests
+from fastapi import HTTPException
 
 # Load environment variables from .env file
 load_dotenv()
@@ -17,8 +18,10 @@ class GeoCodeAPI:
             'appid': self.api_key,
         }
         url = f"http://api.openweathermap.org/geo/1.0/direct"
-        response = requests.get(url, params=params)
-        response_payload = response.json()[0]
+        response = requests.get(url, params=params).json()
+        if len(response) == 0:
+            raise HTTPException(status_code=404, detail=f'Cannot find city "{city}"')
+        response_payload = response[0]
         return {
             'lat': response_payload['lat'],
             'lon': response_payload['lon']
@@ -43,8 +46,8 @@ class WeatherAPI:
         if unix_time:
             params['dt'] = unix_time
 
-        response = requests.get(url, params=params)
-        response_payload = response.json()['current']
+        response = requests.get(url, params=params).json()
+        response_payload = response['current']
 
         cloud_cover = None
         for weather in response_payload['weather']:
