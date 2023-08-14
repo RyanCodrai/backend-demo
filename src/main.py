@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 import logging
+from weather import WeatherAPI
 
 
 logging.basicConfig(
@@ -12,6 +13,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 
+weather_api = WeatherAPI()
 app = FastAPI(version='0.3.0')
 
 
@@ -20,10 +22,15 @@ def read_api_version():
         return f.read()
 
 
-@app.get("/ping")
+@app.get("/ping/")
 async def status():
     return {
       "name": "weatherservice",
       "status": "ok",
       "version": read_api_version()
     }
+
+
+@app.get("/forecast/{city}/")
+async def forecast(city):
+    return weather_api.get_weather(city)
