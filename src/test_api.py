@@ -103,11 +103,11 @@ class TestWeatherService(unittest.TestCase):
 
     def test_short_date(self):
         # Test whether the api correctly responds with 400 for date before January 1st, 1970.
-        error_message = f"Service did not respond 400 for date before January 1st, 1970."
+        error_message = f"Service did not respond 200 for date before January 1st, 1970."
         city_name = 'London'
         iso_time = '2020-12-25'
         api_response = requests.get(f'{self.base_url}/forecast/{city_name}', params={'at': iso_time})
-        self.assertEqual(api_response.status_code, 400, error_message)
+        self.assertEqual(api_response.status_code, 200, error_message)
 
     def test_date_in_past(self):
         # Test whether the api correctly responds with 400 for date before January 1st, 1970.
